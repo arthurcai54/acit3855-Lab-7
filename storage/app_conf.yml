@@ -1,0 +1,12 @@
+version: 1
+datastore: 
+  user: root
+  password: Mahomeboy#15
+  hostname: 100.26.246.20
+  port: 3306
+  db: events
+
+events:
+  hostname: 100.26.246.20
+  port: 9092
+  topic: events
