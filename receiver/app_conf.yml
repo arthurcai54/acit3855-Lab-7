@@ -1,0 +1,10 @@
+version: 1
+sell:
+  url: http://localhost:8090/sell
+numsales:
+  url: http://localhost:8090/numsales
+
+events:
+  hostname: 54.162.79.180
+  port: 9092
+  topic: events
