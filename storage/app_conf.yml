@@ -2,11 +2,11 @@ version: 1
 datastore: 
   user: root
   password: Mahomeboy#15
-  hostname: 100.26.246.20
+  hostname: 127.0.0.1
   port: 3306
   db: events
 
 events:
-  hostname: 100.26.246.20
+  hostname: 100.25.199.62
   port: 9092
   topic: events

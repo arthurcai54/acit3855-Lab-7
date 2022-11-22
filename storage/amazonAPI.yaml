@@ -16,6 +16,23 @@ tags:
   description: amazon website
 paths:
   /sell:
+    post:
+      tags:
+      - amazon
+      summary: selling an inventory item
+      description: sell an item from the system
+      operationId: app.sellItem
+      requestBody:
+        description: selling an item
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellItem'
+      responses:
+        "201":
+          description: item sold
+        "400":
+          description: invalid input, object invalid
     get:
       tags:
         - amazon
@@ -49,6 +66,23 @@ paths:
                   message:
                     type: string
   /numsales:
+    post:
+      tags:
+      - amazon
+      summary: number of sales
+      description: number of sales tracked by the system
+      operationId: app.sales
+      requestBody:
+        description: tracking the number of sales
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NumSales'
+      responses:
+        "201":
+          description: how much money made
+        "400":
+          description: invalid input, object invalid
     get:
       tags:
         - amazon
@@ -62,7 +96,7 @@ paths:
           schema:
             type: string
             format: date-time
-            example: 2016-08-29T09:12:33.001Z
+            example: '2016-08-29T09:12:33.001Z'
       responses:
         "200":
           description: information on number of sales successfully revealed
@@ -93,6 +127,7 @@ components:
       - num_times_bought_before
       - date_sold
       - trace_id
+      - date_created
       type: object
       properties:
         item_id:
@@ -115,9 +150,12 @@ components:
           example: 266
         date_sold:
           format: date-time
-          example: 2022-09-08T10:10:10.010Z
+          example: '2022-09-08T10:10:10.010Z'
         trace_id:
           format: string
+        date_created:
+          format: date-time
+          example: '2022-09-08T10:10:10.010Z'
     NumSales:
       required:
       - sale_id
@@ -126,6 +164,7 @@ components:
       - num_vans_needed      
       - average_rating
       - trace_id
+      - date_created
       type: object
       properties:
         sale_id:
@@ -145,4 +184,7 @@ components:
           example: 3.5
         trace_id:
           type: string
+        date_created:
+          format: date-time
+          example: '2022-09-08T10:10:10.010Z'
           
