@@ -42,29 +42,29 @@ def populate_stats():
     # query_results = session.execute(latestSaleOfItemStat).fetchall()
     # print(query_results)
     # read timestamp from query result
-
+    
+    timestamp = datetime.now()
+    timestamp_str = str(timestamp.strptime(str(timestamp), "%Y-%m-%d %H:%M:%S.%f"))
+    
     if latestSaleOfItemStat == None:
     # logger.info("Statistics do not exist")
-        latestSaleOfItemStat = {}
-        latestSaleOfItemStat['highest_price'] = 100.00
-        latestSaleOfItemStat['maximum_rating'] = 5
-        latestSaleOfItemStat['max_num_items_sold'] = 3
-        latestSaleOfItemStat['max_num_times_bought_before'] = 10
-        latestSaleOfItemStat['max_num_vans_needed'] = 100
-        latestSaleOfItemStat['last_updated'] = '2022-11-11T11:11:11Z'
-
-    # timestamp = query_results[0][0].last_updated
-
-    timestamp = latestSaleOfItemStat['last_updated']
+        final_stats = SaleOfItemStats(100.00, 5, 3, 10, 100, timestamp_str)  
 
     # read all events from the database that have happened since the timestamp
 
     # GET endpoint 1
-    response1 = requests.get("http://localhost:8090/sell?timestamp=" + timestamp)
+    response1 = requests.get("http://localhost:8090/sell?timestamp=" + timestamp_str)
 
     print("RESPONSE 1" + str(response1))
 
     response1_json = response1.json()
+    print(response1_json)
+    # each_purchase = []
+    
+    # for item in response1_json:
+    #     print(type(item))
+    #     print(item)
+    #     each_purchase.append(float(item['max_num_times_bought_before']))
     
     logger.info(f"Number of events received: {len(response1_json)}")
     if response1.status_code != 200:
@@ -73,14 +73,14 @@ def populate_stats():
     print("HERE")
     # print("MAX_NUM_TIMES " + latestSaleOfItemStat['max_num_times_bought_before'])
 
-    max_num_times_bought = max(0, latestSaleOfItemStat['max_num_times_bought_before'])
+    max_num_times_bought = max(0, final_stats.max_num_times_bought_before)
 
     print(max_num_times_bought)
 
     logger.debug("Updated statistics for maximum number of times bought before: " + str(max_num_times_bought))
 
     # GET endpoint 2
-    response2 = requests.get("http://localhost:8090/numsales?timestamp=" + timestamp)
+    response2 = requests.get("http://localhost:8090/numsales?timestamp=" + timestamp_str)
 
     print("RESPONSE 2" + str(response2))
 
@@ -91,16 +91,16 @@ def populate_stats():
     if response1.status_code != 200:
         logger.error("No response")
     
-    max_num_vans = max(0, latestSaleOfItemStat['max_num_vans_needed'])
+    max_num_vans = max(0, final_stats.max_num_vans_needed)
 
     logger.debug("Updated statistics for maximum number vans needed: " + str(max_num_vans))
 
-    final_stats = SaleOfItemStats(latestSaleOfItemStat["highest_price"],
-                            latestSaleOfItemStat["maximum_rating"],
-                            latestSaleOfItemStat["max_num_items_sold"],
-                            latestSaleOfItemStat["max_num_times_bought_before"],
-                            latestSaleOfItemStat["max_num_vans_needed"],
-                            latestSaleOfItemStat["last_updated"])
+    final_stats = SaleOfItemStats(final_stats.highest_price,
+                            final_stats.maximum_rating,
+                            final_stats.max_num_items_sold,
+                            final_stats.max_num_times_bought_before,
+                            final_stats.max_num_vans_needed,
+                            final_stats.last_updated)
 
     session.add(final_stats)
     logger.info("End Periodic Processing")
